@@ -40,11 +40,13 @@ func main() {
 
 func createLogger() {
 	today := time.Now().Format(time.DateOnly)
-	wd, err := os.Getwd()
+
+	logDir := "logs"
+	err := os.MkdirAll(logDir, 0775)
 	if err != nil {
 		panic(err)
 	}
-	filename := wd + "/logs/backend" + today + ".log"
+	filename := logDir + "/backend" + today + ".log"
 	file, err := os.OpenFile(
 		filename,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
