@@ -1,0 +1,16 @@
+meta {
+  name: getEvents
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://{{authority}}/events
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+}

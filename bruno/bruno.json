@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Website Backend",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
