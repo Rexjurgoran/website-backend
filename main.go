@@ -31,11 +31,11 @@ func main() {
 	createLogger()
 	err := godotenv.Load()
 	if err != nil {
-		log.Error().Msg(err.Error())
+		log.Warn().Msg(err.Error())
 	}
 	router := mux.NewRouter()
 	router.HandleFunc("/events", getEvents).Methods("GET")
-	log.Fatal().Msg(http.ListenAndServe(":80", router).Error())
+	log.Fatal().Msg(http.ListenAndServe(":8080", router).Error())
 }
 
 // createLogger creates an logger in ECS format to standard output
