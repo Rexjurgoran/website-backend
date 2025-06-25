@@ -31,34 +31,20 @@ func main() {
 	createLogger()
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal().Msg(err.Error())
+		log.Error().Msg(err.Error())
 	}
 	router := mux.NewRouter()
 	router.HandleFunc("/events", getEvents).Methods("GET")
 	log.Fatal().Msg(http.ListenAndServe(":80", router).Error())
 }
 
+// createLogger creates an logger in ECS format to standard output
 func createLogger() {
-	today := time.Now().Format(time.DateOnly)
-
-	logDir := "logs"
-	err := os.MkdirAll(logDir, 0775)
-	if err != nil {
-		panic(err)
-	}
-	filename := logDir + "/backend" + today + ".log"
-	file, err := os.OpenFile(
-		filename,
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
-		0664,
-	)
-	if err != nil {
-		panic(err)
-	}
-	logger := ecszerolog.New(file)
+	logger := ecszerolog.New(os.Stdout)
 	log.Logger = logger
 }
 
+// getEvents fetches events from database and returns them as json response
 func getEvents(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
 	events, err := readEvents()
@@ -67,9 +53,10 @@ func getEvents(response http.ResponseWriter, request *http.Request) {
 		response.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	error := json.NewEncoder(response).Encode(events)
-	if error != nil {
-		log.Fatal().Msg(error.Error())
+
+	err = json.NewEncoder(response).Encode(events)
+	if err != nil {
+		log.Error().Msg(err.Error())
 	} else {
 		log.Info().Msg("getEvents() was successfull")
 	}

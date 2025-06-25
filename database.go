@@ -23,9 +23,10 @@ func getDatabase() *mongo.Database {
 	opts := options.Client().ApplyURI("mongodb+srv://" + os.Getenv("MONGODB_USERNAME") + ":" + os.Getenv("MONGODB_PASSWORD") + "@cluster0.gkjrmx3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(opts)
 	if err != nil || client == nil {
-		log.Fatal().Msg(err.Error())
+		log.Error().Msg(err.Error())
 	}
-	return client.Database("db")
+	database = client.Database("db")
+	return database
 }
 
 // readEvents tries to fetch events from the database
